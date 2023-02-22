@@ -276,5 +276,6 @@ module.exports = {
     deleteUser,
     getMyUser,
     deleteMyUser,
-    patchMyUser
+    patchMyUser,
+    getUserByEmail
 }
