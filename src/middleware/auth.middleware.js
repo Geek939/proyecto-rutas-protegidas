@@ -1,11 +1,10 @@
-const { ExtractJwt, Strategy } = require('passport-jwt')
+const {ExtractJwt, Strategy} = require('passport-jwt')
 const passport = require('passport')
-const { findUserById } = require('../users/users.controllers')
- 
+
+const findUserById = require('../users/users.controllers')
 
 const passportConfigs = {
-  
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: 'academlo'
 }
 
@@ -13,13 +12,13 @@ passport.use(new Strategy(passportConfigs, (tokenDecoded, done) => {
     findUserById(tokenDecoded.id)
         .then(data => {
             if(data){
-               done(null, tokenDecoded) 
+                done(null, tokenDecoded)
             } else {
-               done(null, false, {message: 'Token Incorrect'}) 
+                done(null, false, {message: 'Wrong Token'})
             }
         })
         .catch(err => {
-            done(err, false) 
+            done(err, false)
         })
 }))
 
