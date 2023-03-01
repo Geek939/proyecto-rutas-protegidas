@@ -1,41 +1,38 @@
-const checkUserCredentials = require('./auth.controller')
-const response = require('../utils/handleResponses')
+const checkUsersCredentials = require('./auth.controllers')
+const response = require('../utils/responses.handler')
 const jwt = require('jsonwebtoken')
 
 const postLogin = (req, res) => {
-    const { email, password } = req.body
-    checkUserCredentials(email, password)
+    const {email, password} = req.body 
+    checkUsersCredentials(email, password)
         .then(data => {
             if(data){
-                
                 const token = jwt.sign({
                     id: data.id,
-                    email: data.email,
-                    firstName: data.firstName
-                }, 'academlo', {
+                    email: data.email
+                }, process.env.JWT_SECRET, {
                     expiresIn: '1d'
                 })
-
                 response.success({
                     res,
-                    status:200,
-                    message: 'Correct Credentials!',
+                    status: 200,
+                    message: 'Credentials are correct! :D',
                     data: token
                 })
             } else {
                 response.error({
                     res,
                     status: 401,
-                    message: 'Invalid Credentials'
+                    message: 'Invalid credentials O_o'
                 })
             }
         })
         .catch(err => {
             response.error({
                 res,
-                status:400,
-                data: err,
-                message: 'Something Bad'
+                status: 400,
+                message: err.message || 'Something went wrong U_U',
+                data: err
             })
         })
 }
